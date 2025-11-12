@@ -5,8 +5,9 @@ import api from "../../services/api.js"
 import { Button } from "../../components/Button/styles"
 import TopBackground from "../../components/TopBackground/index.jsx"
 import {Title} from './styles'
-import {Container, ContainerUser, CardUsers, TrashIcon,} from './styles'
+import {Container, ContainerUser, CardUsers, TrashIcon, AvatarUser} from './styles'
 import Trash from "../../assets/trash.svg"
+
 
 
 
@@ -25,6 +26,13 @@ useEffect(() => {
    
     }, [])
 
+    async function deleteUser(id) {
+        await api.delete(`/usuarios/${id}`);
+        const filteredUsers = users.filter((user) => user.id !== id);
+        setUsers (filteredUsers);
+    }
+        
+
     return (
         <Container>
             <TopBackground />
@@ -34,12 +42,13 @@ useEffect(() => {
             <ContainerUser>
             {users.map( (user) => (
                 <CardUsers key={user.id}>
+                    <AvatarUser src={"https://avatar.iran.liara.run/public?username=${user.id}"}/>
                 <div>   
-                    <p>Nome: {user.name}</p>
+                    <h3>Nome: {user.name}</h3>
                     <p>Email: {user.email}</p>
                     <p>Idade: {user.age}</p>
                 </div>
-                <TrashIcon src={Trash} alt="Lixeira" />
+                <TrashIcon src={Trash} alt="Lixeira" onClick={() => deleteUser(user.id)}/>
                 </CardUsers>
             ))}
             </ContainerUser>
